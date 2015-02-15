@@ -1,0 +1,28 @@
+import "options.proto";
+
+package expresspb2.test;
+
+message TestSerializer {
+    optional uint32 intValue = 0;
+    optional Composed composedValue = 1;
+    repeated string repeatedValue = 2;
+    repeated Composed repeatedComposedValue = 3;
+
+    message Composed {
+        optional string strValue = 0;
+    }
+}
+
+message TestRequest {
+    optional string id = 1;
+    optional string value = 2;
+
+    message Response {
+        optional string id = 2;
+    }
+}
+
+service TestService {
+    option (options.route) = "/test/[\w\d\.]+";
+    rpc Get(TestRequest) returns (TestRequest.Response);
+}

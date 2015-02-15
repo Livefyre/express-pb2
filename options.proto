@@ -1,0 +1,7 @@
+import "google/protobuf/descriptor.proto";
+
+package expresspb2.options;
+
+extend google.protobuf.ServiceOptions {
+    optional string route = 10010;
+}

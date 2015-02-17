@@ -45,9 +45,14 @@ var protobufServiceApi = function(service) {
             return;
         }
 
-        var proto = new (method.resolvedRequestType.build());
+        var proto = new(method.resolvedRequestType.build());
         proto.$set(req.body);
         req.proto = proto;
+
+        var match = req.url.match(new RegExp(route));
+        if (match) {
+            proto.$set("id", match[1]);
+        }
 
         var superJson = res.json;
         var json = function(chunk, encoding, callback) {

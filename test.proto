@@ -13,6 +13,14 @@ message TestSerializer {
     }
 }
 
+message TestExtension {
+    extend TestSerializer {
+        optional TestExtension extension = 100;
+    }
+
+    optional string extensionValue = 1;
+}
+
 message TestRequest {
     optional string id = 1;
     optional string value = 2;

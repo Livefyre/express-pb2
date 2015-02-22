@@ -57,7 +57,7 @@ var protobufServiceApi = function(service) {
         var superJson = res.json;
         var json = function(chunk, encoding, callback) {
             if (chunk.$type) {
-                chunk = serializers.toObject(chunk);
+                chunk = serializers.serialize(chunk);
             }
             superJson.call(this, chunk, encoding, callback);
         }
@@ -70,5 +70,8 @@ var protobufServiceApi = function(service) {
 };
 
 module.exports = {
-    protobufServiceApi: protobufServiceApi
+    protobufServiceApi: protobufServiceApi,
+    registerSerializer: serializers.register,
+    serialize: serializers.serialize,
+    deserialize: serializers.deserialize
 };

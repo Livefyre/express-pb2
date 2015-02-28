@@ -73,5 +73,6 @@ module.exports = {
     protobufServiceApi: protobufServiceApi,
     registerSerializer: serializers.register,
     serialize: serializers.serialize,
-    deserialize: serializers.deserialize
+    deserialize: serializers.deserialize,
+    simpleCustomDeserializer: serializers.simpleCustomDeserializer
 };

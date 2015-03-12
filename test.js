@@ -7,6 +7,10 @@ var expresspb2 = require("./index.js");
 var request = require('supertest');
 
 describe("serializers.js", function() {
+    beforeEach(function(){
+        protobufSerializer.reset();
+    });
+
     describe("serialize", function() {
         it("Serializes primitives", function(done) {
             var proto = new protos.TestSerializer();
@@ -59,7 +63,6 @@ describe("serializers.js", function() {
             protobufSerializer.register(protos.TestSerializer.Composed, serializer);
             var result = protobufSerializer.serialize(proto);
             expect(result.composedValue.customKey).to.equal("the value");
-            protobufSerializer.reset()
             done();
         });
         it("Serializes extensions", function(done) {
@@ -98,6 +101,19 @@ describe("serializers.js", function() {
             expect(compValue.length).to.equal(1);
             expect(compValue[0].strValue).to.equal("the value");
             done();
+        });
+        it("Uses custom deserializers for composed objects", function() {
+            function deserializer(value, src, dest, field, expresspb2) {
+                dest.set('strValue', value);
+            }
+            protobufSerializer.register(protos.TestSerializer.Composed, null, deserializer);
+
+            var obj = {
+                composedValue: 'test me'
+            };
+
+            var result = protobufSerializer.deserialize(obj, protos.TestSerializer);
+            expect(result.get("composedValue").strValue).to.equal('test me');
         });
         it("Deserializes extensions", function(done) {
             var obj = {};

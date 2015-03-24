@@ -2,6 +2,7 @@ var ProtoBuf = require('protobufjs');
 var serializers = require('./lib/serializers.js')
 var express = require("express");
 var methods = require("methods");
+var _ = require('underscore');
 
 var METHOD_TYPES = ["Service.Method", "Service.RPCMethod"]
 var ROUTE_OPTION_KEYS = ["(expresspb2.options.route)", "(options.route)"]
@@ -47,8 +48,8 @@ var protobufServiceApi = function(service) {
         }
 
         var proto = new(method.resolvedRequestType.build());
-        var body = (req.method.toLowerCase() === 'get' && !req.body) ? req.params : req.body;
-        proto.$set(body);
+
+        proto.$set(_.extend(req.body, req.params, req.query));
         req.proto = proto;
         if (match[1]) {
             proto.$set("id", match[1]);    

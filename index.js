@@ -40,18 +40,18 @@ var protobufServiceApi = function(service) {
 
     router.use(function(req, res, next) {
         var method = methodsByName[req.method.toLowerCase()];
-        if (!method) {
+        var match = req.url.match(new RegExp(route));
+        if (!(method && match)) {
             next();
             return;
         }
 
         var proto = new(method.resolvedRequestType.build());
-        proto.$set(req.body);
+        var body = (req.method.toLowerCase() === 'get' && !req.body) ? req.params : req.body;
+        proto.$set(body);
         req.proto = proto;
-
-        var match = req.url.match(new RegExp(route));
-        if (match) {
-            proto.$set("id", match[1]);
+        if (match[1]) {
+            proto.$set("id", match[1]);    
         }
 
         var superJson = res.json;

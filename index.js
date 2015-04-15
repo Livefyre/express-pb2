@@ -48,8 +48,11 @@ var protobufServiceApi = function(service) {
         }
 
         var proto = new(method.resolvedRequestType.build());
-
-        proto.$set(_.extend(req.body, req.params));
+        _.extend(req.body, req.params);
+        if (req.method.toLowerCase() === 'get') {
+            _.extend(req.body, req.query);
+        }
+        proto.$set(req.body);
         req.proto = proto;
         if (match[1]) {
             proto.$set("id", match[1]);    
